@@ -1,0 +1,15 @@
+{
+  "app.name": "Trinkwasser",
+  "tray.tooltip": "Trinkwasser – Erinnerung",
+  "tray.open": "Öffnen",
+  "tray.testNotification": "Test-Benachrichtigung",
+  "tray.quit": "Beenden",
+  "toast.title": "Zeit für ein Glas Wasser 💧",
+  "toast.body": "Ein Glas ({amount} ml) hält dich fit und konzentriert.",
+  "toast.drank": "Getrunken",
+  "toast.snooze": "In {minutes} Min. erinnern",
+  "main.heading": "Trinkwasser",
+  "main.todayCount": "Heute per Benachrichtigung bestätigt: {count}",
+  "main.testButton": "Test-Benachrichtigung senden",
+  "main.hint": "Die App läuft im Infobereich weiter, wenn du dieses Fenster schließt."
+}

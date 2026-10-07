@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Nur lokale Ressourcen, kein Inline-Script, keine Netzwerkverbindungen -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>Trinkwasser</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="card">
+      <img class="logo" src="../../assets/icon.png" alt="" width="72" height="72" />
+      <h1 data-i18n="main.heading">Trinkwasser</h1>
+      <p id="today-count" class="stat"></p>
+      <button id="test-btn" type="button" data-i18n="main.testButton">Test-Benachrichtigung senden</button>
+      <p class="hint" data-i18n="main.hint"></p>
+    </main>
+    <script src="renderer.js"></script>
+  </body>
+</html>

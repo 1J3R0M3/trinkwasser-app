@@ -1,0 +1,15 @@
+{
+  "app.name": "Drink Water",
+  "tray.tooltip": "Drink Water – reminder",
+  "tray.open": "Open",
+  "tray.testNotification": "Test notification",
+  "tray.quit": "Quit",
+  "toast.title": "Time for a glass of water 💧",
+  "toast.body": "A glass ({amount} ml) keeps you fit and focused.",
+  "toast.drank": "Done",
+  "toast.snooze": "Remind me in {minutes} min",
+  "main.heading": "Drink Water",
+  "main.todayCount": "Confirmed via notification today: {count}",
+  "main.testButton": "Send test notification",
+  "main.hint": "The app keeps running in the notification area when you close this window."
+}

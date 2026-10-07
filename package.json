@@ -1,0 +1,17 @@
+{
+  "name": "trinkwasser-erinnerung",
+  "productName": "Trinkwasser",
+  "version": "0.1.0",
+  "description": "Erinnert im Windows-Tray ans Wassertrinken",
+  "main": "src/main/main.js",
+  "author": "J. B. Dietrich",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "icons": "node scripts/gen-icons.js"
+  },
+  "devDependencies": {
+    "electron": "^44.6.0"
+  }
+}
