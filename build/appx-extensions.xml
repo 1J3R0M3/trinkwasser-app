@@ -1,0 +1,6 @@
+        <!-- Autostart im MSIX-Paket. Aktiv nach dem ersten Start der App; ausschalten
+             lässt er sich unter Einstellungen > Apps > Autostart. Windows übergibt
+             hier keine Argumente, siehe src/main/launch.js. -->
+        <desktop:Extension Category="windows.startupTask" Executable="app\Trinkwasser.exe" EntryPoint="Windows.FullTrustApplication">
+          <desktop:StartupTask TaskId="TrinkwasserStartup" Enabled="true" DisplayName="Trinkwasser" />
+        </desktop:Extension>

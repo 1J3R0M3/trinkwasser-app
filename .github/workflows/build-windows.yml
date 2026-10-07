@@ -1,6 +1,8 @@
 name: Windows-Build
 
-# Baut den Installer und die portable ZIP-Version auf einem Windows-Runner.
+# Baut das Store-Paket (AppX, x64 + arm64), den Installer und die portable
+# ZIP-Version auf einem Windows-Runner. Das AppX ist unsigniert – signiert wird
+# es beim Hochladen in Partner Center vom Microsoft Store.
 # - Push auf main / manueller Start: Dateien als Artefakt am Workflow-Lauf
 # - Tag v*: zusätzlich als GitHub-Release (öffentlicher Download-Link)
 on:
@@ -35,6 +37,7 @@ jobs:
         with:
           name: Trinkwasser-Windows
           path: |
+            dist/*.appx
             dist/*.exe
             dist/*.zip
           if-no-files-found: error
@@ -45,5 +48,6 @@ jobs:
         with:
           prerelease: true
           files: |
+            dist/*.appx
             dist/*.exe
             dist/*.zip

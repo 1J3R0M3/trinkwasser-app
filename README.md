@@ -5,9 +5,18 @@ Electron-App im System-Tray, die per Windows-Toast ans Wassertrinken erinnert.
 > Stand: **Schritt 2** – Tray, Test-Benachrichtigung, Einrichtungsassistent,
 > Einstellungen. Erinnerungslogik, Statistiken und Installer folgen.
 
-## Herunterladen (ohne npm)
+## Microsoft Store
 
-Fertige Builds gibt es unter
+Die App wird über den Microsoft Store verteilt (MSIX/AppX, x64 und arm64).
+Wie das Paket entsteht und eingereicht wird, steht in [docs/STORE.md](docs/STORE.md),
+die Datenschutzerklärung in [PRIVACY.md](PRIVACY.md).
+
+## Testversionen ohne Store (ohne npm)
+
+Bis der Store-Eintrag online ist, gibt es zum Testen zusätzlich einen Installer
+und eine ZIP-Version:
+
+Sie liegen unter
 [Releases](https://github.com/1J3R0M3/trinkwasser-app/releases):
 
 - `Trinkwasser-Setup-<version>.exe` installiert die App nur für den aktuellen
@@ -18,6 +27,9 @@ Fertige Builds gibt es unter
 
 Die Dateien sind noch nicht signiert. Windows SmartScreen warnt deshalb beim
 ersten Start („Weitere Informationen“ → „Trotzdem ausführen“).
+
+Die `.appx`-Dateien im Release sind unsigniert und nur zum Hochladen in den
+Store gedacht, nicht zum direkten Installieren.
 
 Gebaut wird automatisch mit GitHub Actions auf einem Windows-Runner
 (`.github/workflows/build-windows.yml`). Jeder Push auf `main` erzeugt ein
@@ -60,6 +72,9 @@ src/
   renderer/   UI (HTML/CSS, ES-Module in js/, ohne Node-Zugriff)
   shared/     Übersetzungen (de/en)
 assets/       Icons (neu erzeugen mit: npm run icons)
+build/appx/   Store-Grafiken (ebenfalls von npm run icons erzeugt)
+build/appx-extensions.xml   Autostart (StartupTask) für das MSIX-Manifest
+docs/STORE.md               Anleitung und Texte für den Microsoft Store
 ```
 
 ### Wie die Toast-Buttons funktionieren

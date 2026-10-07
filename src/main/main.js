@@ -9,6 +9,7 @@ const notifications = require('./notifications');
 const i18n = require('./i18n');
 const settings = require('./settings');
 const autostart = require('./autostart');
+const { shouldStartHidden } = require('./launch');
 
 const RENDERER_INDEX = path.join(__dirname, '..', 'renderer', 'index.html');
 const isDev = process.defaultApp === true; // gestartet über "electron ."
@@ -65,7 +66,8 @@ function start() {
     // Info-Center, nachdem sie beendet war), steht die URL in process.argv.
     const startUrl = findProtocolUrl(process.argv);
     if (startUrl) handleProtocolUrl(startUrl);
-    else if (!s.setupDone || !process.argv.includes('--hidden')) showWindow();
+    else if (!s.setupDone) showWindow();
+    else shouldStartHidden(process.argv).then((hidden) => hidden || showWindow());
   });
 
   app.on('before-quit', () => {

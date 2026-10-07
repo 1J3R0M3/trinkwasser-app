@@ -31,8 +31,23 @@
     "asarUnpack": [
       "assets/**/*"
     ],
+    "protocols": [
+      {
+        "name": "Trinkwasser",
+        "schemes": [
+          "trinkwasser"
+        ]
+      }
+    ],
     "win": {
       "target": [
+        {
+          "target": "appx",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
         {
           "target": "nsis",
           "arch": [
@@ -48,6 +63,23 @@
       ],
       "icon": "assets/icon.png",
       "artifactName": "Trinkwasser-${version}-portable.${ext}"
+    },
+    "appx": {
+      "identityName": "PLATZHALTER.Trinkwasser",
+      "publisher": "CN=PLATZHALTER",
+      "publisherDisplayName": "J. B. Dietrich",
+      "applicationId": "Trinkwasser",
+      "displayName": "Trinkwasser",
+      "backgroundColor": "transparent",
+      "languages": [
+        "de-DE",
+        "en-US"
+      ],
+      "minVersion": "10.0.19041.0",
+      "maxVersionTested": "10.0.26100.0",
+      "addAutoLaunchExtension": false,
+      "customExtensionsPath": "build/appx-extensions.xml",
+      "artifactName": "Trinkwasser-${version}-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": true,
