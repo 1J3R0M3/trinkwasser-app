@@ -5,6 +5,24 @@ Electron-App im System-Tray, die per Windows-Toast ans Wassertrinken erinnert.
 > Stand: **Schritt 2** – Tray, Test-Benachrichtigung, Einrichtungsassistent,
 > Einstellungen. Erinnerungslogik, Statistiken und Installer folgen.
 
+## Herunterladen (ohne npm)
+
+Fertige Builds gibt es unter
+[Releases](https://github.com/1J3R0M3/trinkwasser-app/releases):
+
+- `Trinkwasser-Setup-<version>.exe` installiert die App nur für den aktuellen
+  Benutzer, ohne Adminrechte, nach `%LOCALAPPDATA%\Programs`.
+- `Trinkwasser-<version>-portable.zip` läuft ohne Installation: entpacken und
+  `Trinkwasser.exe` starten. Für die Benachrichtigungen legt die App eine
+  Startmenü-Verknüpfung „Trinkwasser (portabel)“ an.
+
+Die Dateien sind noch nicht signiert. Windows SmartScreen warnt deshalb beim
+ersten Start („Weitere Informationen“ → „Trotzdem ausführen“).
+
+Gebaut wird automatisch mit GitHub Actions auf einem Windows-Runner
+(`.github/workflows/build-windows.yml`). Jeder Push auf `main` erzeugt ein
+Artefakt am Workflow-Lauf, ein Tag `v*` zusätzlich ein Release.
+
 ## Entwicklung
 
 Voraussetzung: Node.js ≥ 20 unter Windows 10/11.

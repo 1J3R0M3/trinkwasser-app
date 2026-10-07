@@ -1,5 +1,6 @@
 'use strict';
 const { app, BrowserWindow, ipcMain, session, shell } = require('electron');
+const fs = require('node:fs');
 const path = require('node:path');
 const { APP_ID, PROTOCOL } = require('./constants');
 const { assetPath } = require('./paths');
@@ -88,16 +89,28 @@ function setupAppUserModelId() {
 
   // Unpaketierte Apps brauchen eine Startmenü-Verknüpfung mit dieser AUMID,
   // sonst zeigt Windows die Toasts nicht (zuverlässig) an. Der NSIS-Installer
-  // legt sie an; im Entwicklungsmodus erzeugen wir sie selbst.
+  // legt sie an; im Entwicklungsmodus und für die ZIP-Version (portabel)
+  // erzeugen wir sie selbst.
+  const startMenu = path.join(app.getPath('appData'), 'Microsoft', 'Windows', 'Start Menu', 'Programs');
   if (isDev) {
-    const lnk = path.join(app.getPath('appData'), 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'Trinkwasser (Dev).lnk');
     // 'create' überschreibt eine vorhandene Verknüpfung.
-    shell.writeShortcutLink(lnk, 'create', {
+    shell.writeShortcutLink(path.join(startMenu, 'Trinkwasser (Dev).lnk'), 'create', {
       target: process.execPath,
       args: `"${app.getAppPath()}"`,
       appUserModelId: APP_ID,
     });
+  } else if (isPortable()) {
+    shell.writeShortcutLink(path.join(startMenu, 'Trinkwasser (portabel).lnk'), 'create', {
+      target: process.execPath,
+      appUserModelId: APP_ID,
+    });
   }
+}
+
+// Der NSIS-Installer legt neben der .exe ein Deinstallationsprogramm ab.
+// Fehlt es, läuft die App aus dem entpackten ZIP.
+function isPortable() {
+  return !fs.existsSync(path.join(path.dirname(process.execPath), `Uninstall ${app.getName()}.exe`));
 }
 
 function registerProtocol() {

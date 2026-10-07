@@ -1,7 +1,7 @@
 {
   "name": "trinkwasser-erinnerung",
   "productName": "Trinkwasser",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Erinnert im Windows-Tray ans Wassertrinken",
   "main": "src/main/main.js",
   "author": "J. B. Dietrich",
@@ -9,9 +9,56 @@
   "private": true,
   "scripts": {
     "start": "electron .",
-    "icons": "node scripts/gen-icons.js"
+    "icons": "node scripts/gen-icons.js",
+    "dist:win": "electron-builder --win --publish never"
   },
   "devDependencies": {
-    "electron": "^44.6.0"
+    "electron": "^44.6.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "de.jbdietrich.trinkwasser",
+    "productName": "Trinkwasser",
+    "copyright": "© 2026 J. B. Dietrich",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "assets/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowElevation": false,
+      "createDesktopShortcut": false,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Trinkwasser",
+      "artifactName": "Trinkwasser-Setup-${version}.${ext}"
+    },
+    "zip": {
+      "artifactName": "Trinkwasser-${version}-portable.${ext}"
+    }
   }
 }
