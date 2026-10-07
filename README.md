@@ -26,9 +26,8 @@ Fenster auslösen.
 
 ## Daten
 
-Die Einstellungen liegen als JSON unter `%APPDATA%\Trinkwasser\settings.json`
-(im Entwicklungsmodus unter `%APPDATA%\trinkwasser-erinnerung\`). Löscht man
-die Datei, startet beim nächsten Mal wieder der Einrichtungsassistent.
+Die Einstellungen liegen als JSON unter `%APPDATA%\Trinkwasser\settings.json`.
+Löscht man die Datei, startet beim nächsten Mal wieder der Einrichtungsassistent.
 Der Hauptprozess prüft alle Werte, bevor er sie speichert.
 
 Arbeitszeiten werden pro Wochentag gespeichert (Index 0 = Montag). Das Ende
