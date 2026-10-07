@@ -2,8 +2,8 @@
 
 Electron-App im System-Tray, die per Windows-Toast ans Wassertrinken erinnert.
 
-> Stand: **Schritt 1** – Projektgerüst, Tray, Test-Benachrichtigung.
-> Einrichtung, Einstellungen, Statistiken und Installer folgen.
+> Stand: **Schritt 2** – Tray, Test-Benachrichtigung, Einrichtungsassistent,
+> Einstellungen. Erinnerungslogik, Statistiken und Installer folgen.
 
 ## Entwicklung
 
@@ -24,13 +24,23 @@ aktuellen Benutzer an. Beides ist für Toasts mit Buttons nötig:
 Die Test-Benachrichtigung lässt sich über das Tray-Menü oder den Button im
 Fenster auslösen.
 
+## Daten
+
+Die Einstellungen liegen als JSON unter `%APPDATA%\Trinkwasser\settings.json`
+(im Entwicklungsmodus unter `%APPDATA%\trinkwasser-erinnerung\`). Löscht man
+die Datei, startet beim nächsten Mal wieder der Einrichtungsassistent.
+Der Hauptprozess prüft alle Werte, bevor er sie speichert.
+
+Arbeitszeiten werden pro Wochentag gespeichert (Index 0 = Montag). Das Ende
+muss nach dem Beginn liegen; Schichten über Mitternacht werden nicht unterstützt.
+
 ## Aufbau
 
 ```
 src/
   main/       Hauptprozess (Tray, Toasts, IPC, Fenster)
   preload/    contextBridge – einzige Schnittstelle zum Renderer
-  renderer/   UI (HTML/CSS/JS, ohne Node-Zugriff)
+  renderer/   UI (HTML/CSS, ES-Module in js/, ohne Node-Zugriff)
   shared/     Übersetzungen (de/en)
 assets/       Icons (neu erzeugen mit: npm run icons)
 ```

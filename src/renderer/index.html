@@ -11,13 +11,131 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="card">
-      <img class="logo" src="../../assets/icon.png" alt="" width="72" height="72" />
-      <h1 data-i18n="main.heading">Trinkwasser</h1>
-      <p id="today-count" class="stat"></p>
-      <button id="test-btn" type="button" data-i18n="main.testButton">Test-Benachrichtigung senden</button>
-      <p class="hint" data-i18n="main.hint"></p>
-    </main>
-    <script src="renderer.js"></script>
+    <!-- ================================================================ -->
+    <!-- Einrichtung (erster Start)                                       -->
+    <!-- ================================================================ -->
+    <section id="view-setup" class="view" hidden>
+      <header class="setup-head">
+        <img class="logo" src="../../assets/icon.png" alt="" width="56" height="56" />
+        <h1 data-i18n="setup.welcome"></h1>
+        <p class="muted" id="setup-step"></p>
+      </header>
+
+      <form id="setup-form" class="card" novalidate>
+        <div class="page" data-page="0">
+          <h2 data-i18n="setup.language.heading"></h2>
+          <p class="muted" data-i18n="setup.language.text"></p>
+          <div class="choices" role="radiogroup">
+            <label class="choice"><input type="radio" name="language" value="de" /><span>Deutsch</span></label>
+            <label class="choice"><input type="radio" name="language" value="en" /><span>English</span></label>
+          </div>
+        </div>
+
+        <div class="page" data-page="1" hidden>
+          <h2 data-i18n="setup.goals.heading"></h2>
+          <p class="muted" data-i18n="setup.goals.text"></p>
+          <div class="field-group" data-goals></div>
+        </div>
+
+        <div class="page" data-page="2" hidden>
+          <h2 data-i18n="setup.reminders.heading"></h2>
+          <p class="muted" data-i18n="setup.reminders.text"></p>
+          <div class="field-group" data-interval></div>
+          <fieldset class="field">
+            <legend data-i18n="field.workDays"></legend>
+            <div class="day-chips" id="setup-days"></div>
+          </fieldset>
+          <div class="field">
+            <span class="label" data-i18n="field.workTime"></span>
+            <div class="time-range">
+              <input type="time" name="start" required />
+              <span>–</span>
+              <input type="time" name="end" required />
+            </div>
+          </div>
+          <div class="field-group" data-autostart></div>
+        </div>
+
+        <p class="error" id="setup-error" role="alert"></p>
+        <footer class="actions">
+          <button type="button" class="secondary" id="setup-back" data-i18n="common.back"></button>
+          <button type="submit" id="setup-next" data-i18n="common.next"></button>
+        </footer>
+      </form>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- Startseite                                                       -->
+    <!-- ================================================================ -->
+    <section id="view-home" class="view" hidden>
+      <header class="topbar">
+        <img class="logo" src="../../assets/icon.png" alt="" width="32" height="32" />
+        <h1 data-i18n="app.name"></h1>
+        <button type="button" class="secondary" id="home-settings" data-i18n="home.settings"></button>
+      </header>
+
+      <div class="card">
+        <dl class="summary">
+          <div><dt data-i18n="home.dailyGoal"></dt><dd id="home-daily"></dd></div>
+          <div><dt data-i18n="home.weeklyGoal"></dt><dd id="home-weekly"></dd></div>
+        </dl>
+        <p id="home-interval"></p>
+        <p id="home-today"></p>
+        <p id="home-confirmed" class="muted"></p>
+        <button type="button" id="home-test" data-i18n="home.testButton"></button>
+      </div>
+      <p class="hint muted" data-i18n="home.hint"></p>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- Einstellungen                                                    -->
+    <!-- ================================================================ -->
+    <section id="view-settings" class="view" hidden>
+      <header class="topbar">
+        <button type="button" class="secondary icon" id="settings-back" data-i18n-aria="common.back">←</button>
+        <h1 data-i18n="settings.title"></h1>
+      </header>
+
+      <form id="settings-form" novalidate>
+        <div class="card">
+          <h2 data-i18n="settings.general"></h2>
+          <label class="field">
+            <span class="label" data-i18n="field.language"></span>
+            <select name="language" id="settings-language">
+              <option value="de">Deutsch</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <div class="field-group" data-autostart></div>
+        </div>
+
+        <div class="card">
+          <h2 data-i18n="settings.goals"></h2>
+          <div class="field-group" data-goals></div>
+        </div>
+
+        <div class="card">
+          <h2 data-i18n="settings.reminders"></h2>
+          <div class="field-group" data-interval></div>
+        </div>
+
+        <div class="card">
+          <h2 data-i18n="settings.workHours"></h2>
+          <p class="muted" data-i18n="settings.workHoursText"></p>
+          <table class="week-table">
+            <tbody id="settings-days"></tbody>
+          </table>
+          <button type="button" class="link" id="settings-copy" data-i18n="settings.copyFirst"></button>
+        </div>
+
+        <footer class="actions sticky">
+          <p class="error" id="settings-error" role="alert"></p>
+          <span class="status" id="settings-status" role="status"></span>
+          <button type="submit" data-i18n="common.save"></button>
+        </footer>
+      </form>
+    </section>
+
+    <script type="module" src="js/app.js"></script>
   </body>
 </html>

@@ -6,6 +6,8 @@ const { assetPath } = require('./paths');
 const { createTray } = require('./tray');
 const notifications = require('./notifications');
 const i18n = require('./i18n');
+const settings = require('./settings');
+const autostart = require('./autostart');
 
 const RENDERER_INDEX = path.join(__dirname, '..', 'renderer', 'index.html');
 const isDev = process.defaultApp === true; // gestartet über "electron ."
@@ -13,9 +15,12 @@ const isDev = process.defaultApp === true; // gestartet über "electron ."
 let mainWindow = null;
 let isQuitting = false;
 let snoozeTimer = null;
+let pendingView = null; // Ansicht, die nach dem Laden des Fensters geöffnet werden soll
 
-// Schritt 1: Zustand nur im Speicher. Persistenz folgt in Schritt 3.
-const state = { confirmedToday: 0, amountMl: 250, snoozeMinutes: 10 };
+const SNOOZE_MINUTES = 10;
+
+// Getrunkene Mengen liegen noch nur im Speicher. Die Persistenz folgt in Schritt 3.
+const state = { confirmedToday: 0 };
 
 // ---------------------------------------------------------------------------
 // Nur eine Instanz
@@ -37,10 +42,17 @@ function start() {
 
   app.whenReady().then(() => {
     lockDownNetwork();
+
+    const s = settings.load();
+    i18n.setLanguage(s.language);
+    autostart.apply(s.autostart);
+    settings.events.on('changed', onSettingsChanged);
+
     registerIpc();
 
     createTray({
       onOpen: showWindow,
+      onSettings: () => showWindow('settings'),
       onTestNotification: showReminder,
       onQuit: () => {
         isQuitting = true;
@@ -52,7 +64,7 @@ function start() {
     // Info-Center, nachdem sie beendet war), steht die URL in process.argv.
     const startUrl = findProtocolUrl(process.argv);
     if (startUrl) handleProtocolUrl(startUrl);
-    else if (!process.argv.includes('--hidden')) showWindow();
+    else if (!s.setupDone || !process.argv.includes('--hidden')) showWindow();
   });
 
   app.on('before-quit', () => {
@@ -121,7 +133,7 @@ function handleProtocolUrl(raw) {
       broadcastState();
       break;
     case 'snooze': {
-      const min = clampInt(url.searchParams.get('min'), 1, 120, state.snoozeMinutes);
+      const min = clampInt(url.searchParams.get('min'), 1, 120, SNOOZE_MINUTES);
       clearTimeout(snoozeTimer);
       snoozeTimer = setTimeout(showReminder, min * 60 * 1000);
       break;
@@ -140,19 +152,23 @@ function clampInt(value, min, max, fallback) {
 // ---------------------------------------------------------------------------
 // Fenster
 // ---------------------------------------------------------------------------
-function showWindow() {
+// view: optional "settings", um direkt die Einstellungen zu öffnen
+function showWindow(view) {
+  const target = typeof view === 'string' ? view : null;
   if (mainWindow && !mainWindow.isDestroyed()) {
     if (mainWindow.isMinimized()) mainWindow.restore();
     mainWindow.show();
     mainWindow.focus();
+    if (target) send('navigate', target);
     return;
   }
 
+  pendingView = target;
   mainWindow = new BrowserWindow({
-    width: 480,
-    height: 600,
-    minWidth: 380,
-    minHeight: 480,
+    width: 560,
+    height: 720,
+    minWidth: 420,
+    minHeight: 560,
     show: false,
     title: i18n.t('app.name'),
     icon: assetPath('icon.png'),
@@ -182,7 +198,13 @@ function showWindow() {
 }
 
 function showReminder() {
-  notifications.showReminder({ amountMl: state.amountMl, snoozeMinutes: state.snoozeMinutes });
+  notifications.showReminder({ amountMl: settings.get().glassMl, snoozeMinutes: SNOOZE_MINUTES });
+}
+
+function onSettingsChanged(next, prev) {
+  if (next.language !== prev.language) i18n.setLanguage(next.language);
+  if (next.autostart !== prev.autostart) autostart.apply(next.autostart);
+  send('settings:changed', next);
 }
 
 // ---------------------------------------------------------------------------
@@ -201,11 +223,24 @@ function handle(channel, fn) {
 }
 
 function registerIpc() {
-  handle('i18n:get', () => ({ lang: i18n.getLanguage(), strings: i18n.getStrings() }));
+  handle('i18n:get', (lang) => {
+    const l = i18n.available.includes(lang) ? lang : i18n.getLanguage();
+    return { lang: l, strings: i18n.getStrings(l) };
+  });
   handle('state:get', () => ({ ...state }));
+  handle('settings:get', () => settings.get());
+  handle('settings:save', (patch) => settings.update(patch));
+  handle('app:info', () => ({ autostart: autostart.info(), limits: settings.LIMITS, initialView: takePendingView() }));
+  handle('autostart:openWindowsSettings', () => autostart.openWindowsSettings());
   handle('notification:test', () => showReminder());
 
   i18n.events.on('changed', () => send('i18n:changed', { lang: i18n.getLanguage(), strings: i18n.getStrings() }));
+}
+
+function takePendingView() {
+  const v = pendingView;
+  pendingView = null;
+  return v;
 }
 
 function send(channel, payload) {
